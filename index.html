@@ -1,0 +1,143 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Lawrence Law</title>
+    <style>
+        body {
+            background-color:#00ff90;
+        }
+        menu {
+            position:fixed;
+            top:30%;
+            left:70%;
+            background-color:#808080;
+            opacity:0.7;
+            width:300px;
+            z-index:999;
+        }
+        section {
+            position:relative;
+        }
+        menu > menuitem {
+            font-family:"Comic Sans MS", cursive, sans-serif;
+            font-weight:200;
+            margin:5px 30px 5px 30px;        
+        }
+        menuitem:link {
+            text-decoration:dotted    
+        }
+        menuitem:visited {
+            text-decoration:wavy
+        }
+        menuitem:hover {
+            text-decoration:underline
+        }
+        menuitem:active {
+            text-decoration:double;
+        }
+        #profile_pic {
+            position: relative;
+             background-image: url('1.jpg');
+             padding-top:60%;
+             filter:grayscale(70%);
+        }
+        #content {
+             position: absolute;
+             width:300px;
+             top:50px;
+             left:0px;
+             background-color:#00ff90;
+             z-index:999;
+        }
+        .fb-like2 {
+            position:fixed !important;
+            top:80%;
+            left:70%;
+            z-index:999;
+        }
+    </style>
+    
+</head>
+<body>
+    <menu>
+        <menuitem data-open="Me">Me</menuitem>
+        <menuitem data-open="Contact">Contact</menuitem>
+
+        <div id="content"></div>
+        <div class="fb-like fb-like2" data-href="https://developers.facebook.com/docs/plugins/" data-layout="standard" data-action="like" data-show-faces="true" data-share="true"></div>
+    </menu>
+    <section>
+        <div id="profile_pic">
+        </div>
+    </section>
+</body>
+<script>
+    (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.3";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+    var model = {
+        content: {
+            'Me': 'Hello I am Lawrence Law',
+            'Contact': 'Please contact me via kwanc.law@gmail.com'
+        }
+    }
+    var viewModel = {
+        init: function () {
+            Element.prototype.hasClass = function (className) {
+                return this.className && new RegExp("(^|\\s)" + className + "(\\s|$)").test(this.className);
+            };
+            Element.prototype.addClass = function (className) {
+                this.setAttribute('class', className);
+            };
+            Element.prototype.removeClass = function (className) {
+                var reg = new RegExp('(\\s|^)' + className + '(\\s|$)');
+                this.className = this.className.replace(reg, '');
+            };
+            var menuitems = document.getElementsByTagName('MENUITEM');
+            console.log(menuitems.length);
+            for (var i = 0; i < menuitems.length;i++) {
+                menuitems[i].addEventListener('click',
+                    (function (item) {
+                        return function (e) {
+                            console.log("clicked is triggered");
+                            var menuitems = document.getElementsByTagName('MENUITEM');
+                            for (var i = 0; i < menuitems.length; i++) {
+                                menuitems[i].removeClass('selected');
+                            }
+                            item.addClass('selected');
+                            console.log(item + 'is selected');
+                            view.render();
+                        };
+                    })(menuitems[i])
+                );
+            }
+            view.init();
+        }
+
+    }
+    var view = {
+        menuitems: '',
+        content: '',
+        init: function () {
+            this.menuitems = document.getElementsByTagName('MENUITEM');
+            this.content = document.getElementById('content');
+            console.log('After initialization,length of menuitems is' + this.menuitems.length);
+        },
+        render: function () {
+            console.log('render');
+            for (var i = 0; i < this.menuitems.length;i++) {
+                if (this.menuitems[i].hasClass('selected')) {
+                    var open = this.menuitems[i].getAttribute('data-open');
+                    this.content.innerHTML = model.content[open];
+                }
+            }
+        }
+    }
+    viewModel.init();
+</script>
+
+</html>
